@@ -1,19 +1,43 @@
 package org.example;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
+import java.util.Properties;
 
 public class Main {
 
-    static String url = "jdbc:mariadb://127.0.0.1:3306/digitalehausverwaltung";
-    static String user = "root"; // Ersetzen Sie durch Ihren Benutzernamen
-    static String password = ""; // Ersetzen Sie durch Ihr Passwort
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
 
 
+        Properties props = new Properties();
+
+        try (FileInputStream input = new FileInputStream("src/main/resources/config.properties")) {
+            // Load properties file
+            props.load(input);
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        databaseConnection.openConnection(props);
+
+    }
+
+    public void testSQL() {
         try {
 
+            String url = "jdbc:mariadb://127.0.0.1:3306/digitalehausverwaltung";
+            String user = "root";
+            String password = "";
 
             // Erstelle eine Verbindung-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             Connection conn = DriverManager.getConnection(url, user, password);
@@ -40,7 +64,6 @@ public class Main {
             e.printStackTrace();
             System.out.println("Catch");
         }
-
-
     }
+
 }
